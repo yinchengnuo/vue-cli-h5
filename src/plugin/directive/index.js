@@ -14,37 +14,6 @@ Vue.directive('button-auth-control', { // 注册全局自定义按钮权控指�
   }
 })
 
-Vue.directive('excel', { // 注册全局自定义快速读取 excel `v-excel`
-  inserted: (el, { value }) => {
-    const id = String(Date.now() + Math.floor(Math.random() * (10 ** 16)))
-    const input = document.createElement('input')
-    el['excel-id'] = id
-    el['excel-event'] = () => document.getElementById(id).click()
-    input.id = id
-    input.type = 'file'
-    input.accept = '.xlsx, .xls'
-    input.style.display = 'none'
-    input.onchange = ({ target: { files: [excel] }}) => {
-      if (!excel) return
-      const XLSX = require('xlsx')
-      const reader = new FileReader()
-      reader.onload = async({ target: { result }}) => {
-        const workbook = XLSX.read(result, { type: 'array' })
-        value && value(XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]))
-        input.value = ''
-      }
-      reader.readAsArrayBuffer(excel)
-    }
-    document.body.appendChild(input)
-    el.addEventListener('click', el['excel-event'])
-  },
-  unbind: el => {
-    el = document.getElementById(el['excel-id'])
-    el.removeEventListener('click', el['excel-event'])
-    el.remove()
-  }
-})
-
 Vue.directive('img', { // 注册全局自定义快速读取 excel `v-img:9.formData` `v-img.base64`
   inserted: (el, { value, arg, modifiers: { formData, base64 }}) => {
     const max = isNaN(Number(arg)) ? 1 : Number(arg)

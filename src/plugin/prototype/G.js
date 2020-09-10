@@ -56,18 +56,6 @@ export default new Proxy({ // 一定定义全局对象 G。如果想要在 G 对
     })
   },
 
-  $excel(list, name) {
-    !list.length ? list = [{ '暂无数据': '' }] : ''
-    import('@/vendor/Export2Excel').then(excel => {
-      excel.export_json_to_excel({
-        header: Object.keys(list[0]),
-        data: list.map(listItem => Object.keys(list[0]).map(j => listItem[j])),
-        filename: name || '下载Excel',
-        bookType: 'xlsx'
-      })
-    })
-  },
-
   $compression(file, size = 20, device = 4) {
     if (file[0]) {
       return Promise.all(Array.from(file).map(e => this.$compression(e, size))) // 如果是 file 数组返回 Promise 数组
@@ -130,21 +118,10 @@ export default new Proxy({ // 一定定义全局对象 G。如果想要在 G 对
   },
 
   $download(download, name) {
-    if (download instanceof Array) {
-      import('@/vendor/Export2Excel').then(excel => {
-        excel.export_json_to_excel({
-          header: Object.keys(download[0]),
-          data: download.map(listItem => Object.keys(download[0]).map(j => listItem[j])),
-          filename: name || '下载Excel',
-          bookType: 'xlsx'
-        })
-      })
-    } else {
-      const a = document.createElement('a')
-      a.href = download
-      a.download = name || download
-      a.click()
-    }
+    const a = document.createElement('a')
+    a.href = download
+    a.download = name || download
+    a.click()
   },
 
   $copy(text, message = '复制成功') {
