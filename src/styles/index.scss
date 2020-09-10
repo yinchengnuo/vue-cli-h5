@@ -1,0 +1,18 @@
+@function rpx($rpx) {
+	@return 100vw / 750 * $rpx;
+}
+
+@mixin abs($t: 0, $l: 0, $w: auto, $h: auto) {
+	top: $t;
+	left: $l;
+	width: $w;
+	height: $h;
+	position: absolute;
+}
+
+@mixin flex($c: row) {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-direction: $c;
+}
