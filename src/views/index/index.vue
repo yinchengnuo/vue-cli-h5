@@ -1,10 +1,19 @@
 <template>
-  <div class="index">index</div>
+  <div class="index">
+    <van-button type="info" @click="info">信息按钮</van-button>
+  </div>
 </template>
 
 <script>
 export default {
-
+  methods: {
+    info() {
+      // console.log(this)
+      this.$dialog.alert({
+        message: '弹窗内容'
+      })
+    }
+  }
 }
 </script>
 

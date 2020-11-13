@@ -25,6 +25,18 @@ module.exports = {
       }
     }
   },
+  css: {
+    loaderOptions: {
+      less: {
+        lessOptions: {
+          modifyVars: {
+            'text-color': '#111',
+            'border-color': '#eee'
+          }
+        }
+      }
+    }
+  },
   configureWebpack: {
     name,
     resolve: {

@@ -1,18 +1,8 @@
 import waves from './waves'
 import sticky from './sticky'
-import elDragDialog from './el-drag-dialog'
 
 Vue.directive('waves', waves) // 注册全局水波纹
 Vue.directive('sticky', sticky) // 注册全局吸顶
-Vue.directive('el-drag-dialog', elDragDialog) // 注册全局 el-dialog 拖拽
-
-Vue.directive('button-auth-control', { // 注册全局自定义按钮权控指令 `v-button-permission`
-  bind: (el, { arg }, { context: { $route }}) => {
-    if (!($route.meta.buttons && $route.meta.buttons.includes(arg))) {
-      Vue.nextTick(() => el.remove())
-    }
-  }
-})
 
 Vue.directive('img', { // 注册全局自定义快速读取 excel `v-img:9.formData` `v-img.base64`
   inserted: (el, { value, arg, modifiers: { formData, base64 }}) => {

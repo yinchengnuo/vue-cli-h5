@@ -1,5 +1,6 @@
 import $store from '@/store'
 import $router from '@/router'
+import $events from './$events'
 
 const ElementFuns = ['$alert', '$confirm', '$loading', '$message', '$msgbox', '$notify', '$prompt'] // 全局变量能够访问的 ElementUI 上的方法
 
@@ -11,6 +12,7 @@ Vue.nextTick(() => {
 export default new Proxy({ // 一定定义全局对象 G。如果想要在 G 对象中的方法中调用 G 中的方法，使用 this
   window,
   console,
+  $events,
   document,
   // 注册 EventBus
   $event: new Vue(),
@@ -180,13 +182,14 @@ export default new Proxy({ // 一定定义全局对象 G。如果想要在 G 对
   }
 }, {
   get(target, key) {
-    if (ElementFuns.find(e => e === key)) {
-      throw new Error('这里没有装 ElementUI。有需要了自行安装')
-      // return Reflect.get(Vue.prototype, key)
-    } else if (Reflect.get(vmObj, key)) {
-      return Reflect.get(vmObj, key)
-    } else {
-      return Reflect.get(target, key)
-    }
+    // if (ElementFuns.find(e => e === key)) {
+    //   throw new Error('这里没有装 ElementUI。有需要了自行安装')
+    //   // return Reflect.get(Vue.prototype, key)
+    // } else if (Reflect.get(vmObj, key)) {
+    //   return Reflect.get(vmObj, key)
+    // } else {
+    //   return Reflect.get(target, key)
+    // }
+    return Reflect.get(target, key)
   }
 })
