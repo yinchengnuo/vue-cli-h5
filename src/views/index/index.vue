@@ -8,8 +8,8 @@
 export default {
   methods: {
     info() {
-      // console.log(this)
-      this.$dialog.alert({
+      console.log(this)
+      this.$alert({
         message: '弹窗内容'
       })
     }

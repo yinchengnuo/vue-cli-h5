@@ -2,8 +2,6 @@ import $store from '@/store'
 import $router from '@/router'
 import $events from './$events'
 
-const ElementFuns = ['$alert', '$confirm', '$loading', '$message', '$msgbox', '$notify', '$prompt'] // 全局变量能够访问的 ElementUI 上的方法
-
 const vmObj = { $router }
 Vue.nextTick(() => {
   vmObj.$store = $store
@@ -26,7 +24,7 @@ export default new Proxy({ // 一定定义全局对象 G。如果想要在 G 对
       endStillLoading, // 请求结束仍然 loading
       sucMsg // 自定义请求成功消息提示
     } = conf
-    noLoading ? '' : this._loading = this.$loading()
+    noLoading ? '' : this._loading = true
     return new Promise((resolve, reject) => {
       if (api.length) { // 如果是数组，表示并发请求
         Promise.all(api).then((res) => {
@@ -35,9 +33,11 @@ export default new Proxy({ // 一定定义全局对象 G。如果想要在 G 对
           sucMsg && this.$message.success(sucMsg)
         }).catch(error => {
           reject(error)
-          this._loading.close()
+          this._loading = false
         }).finally(() => {
-          endStillLoading || (this._loading && this._loading.close())
+          if (endStillLoading) {
+            this._loading = false
+          }
         })
       } else {
         api.then(({ code, message, data = {}}) => { // 发送网络请求
@@ -50,9 +50,11 @@ export default new Proxy({ // 一定定义全局对象 G。如果想要在 G 对
           }
         }).catch(error => {
           reject(error)
-          this._loading.close()
+          this._loading = false
         }).finally(() => {
-          endStillLoading || (this._loading && this._loading.close())
+          if (endStillLoading) {
+            this._loading = false
+          }
         })
       }
     })
@@ -182,14 +184,6 @@ export default new Proxy({ // 一定定义全局对象 G。如果想要在 G 对
   }
 }, {
   get(target, key) {
-    // if (ElementFuns.find(e => e === key)) {
-    //   throw new Error('这里没有装 ElementUI。有需要了自行安装')
-    //   // return Reflect.get(Vue.prototype, key)
-    // } else if (Reflect.get(vmObj, key)) {
-    //   return Reflect.get(vmObj, key)
-    // } else {
-    //   return Reflect.get(target, key)
-    // }
     return Reflect.get(target, key)
   }
 })
